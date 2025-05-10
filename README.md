@@ -1,6 +1,6 @@
 sırayla çalıştır
 
-``
+```
 git clone https://github.com/Kutay07/Crodinger.git
 ```
 
