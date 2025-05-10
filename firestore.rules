@@ -1,0 +1,71 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Kullanıcılar (Users) Koleksiyonu Kuralları
+    match /users/{userId} {
+      // Herkes (kimliği doğrulanmamış kullanıcılar dahil) kullanıcıların public key'lerini okuyabilir.
+      // Bu, mesaj gönderirken alıcının public key'ini almak için gereklidir.
+      allow read: if true;
+
+      // Herkes (kimliği doğrulanmamış kullanıcılar dahil) yeni bir kullanıcı profili oluşturabilir.
+      // Ancak, bir kullanıcı profili oluşturulduktan sonra üzerine yazılamaz (update/delete şimdilik engelli).
+      // - request.resource.data.publicKey string olmalı ve boş olmamalı.
+      // - request.resource.data.createdAt bir sunucu zaman damgası olmalı.
+      // - Ekstra alanlara izin verilmez (sadece publicKey ve createdAt).
+      allow create: if request.resource.data.publicKey is string &&
+                       request.resource.data.publicKey != '' &&
+                       request.resource.data.createdAt == request.time &&
+                       request.resource.data.keys().hasOnly(['publicKey', 'createdAt']);
+      
+      // Kullanıcılar kendi profillerini güncelleyemez veya silemez (şimdilik).
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // Sohbetler (Chats) Koleksiyonu Kuralları
+    match /chats/{chatId} {
+      // Sohbet katılımcılarının sohbeti okuyabilmesi için fonksiyon
+      function isParticipant() {
+        return request.auth == null && // Auth kullanmıyoruz, bu yüzden null
+               resource.data.participants != null && 
+               resource.data.participants is list;
+      }
+      
+      // Herkes sohbetleri okuyabilir ve yeni sohbet oluşturabilir
+      allow read: if true;
+      
+      // Herkes sohbet oluşturabilir, ancak yapı belirli kurallara uymalı
+      allow create: if request.resource.data.participants is list &&
+                      request.resource.data.participants.size() == 2 &&
+                      request.resource.data.createdAt == request.time &&
+                      request.resource.data.updatedAt == request.time;
+      
+      // Sohbet güncellemeleri sadece lastMessage ve updatedAt alanlarını güncelleyebilir
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+                      .hasOnly(['lastMessage', 'updatedAt']) &&
+                     request.resource.data.updatedAt == request.time;
+                     
+      // Silme şimdilik kapalı
+      allow delete: if false;
+
+      // Mesajlar (Messages) Alt Koleksiyonu Kuralları
+      match /messages/{messageId} {
+        // Herkes mesajları okuyabilir
+        allow read: if true;
+        
+        // Mesaj gönderme kuralları:
+        // - Gönderenin kullanıcı adı belirtilmeli
+        // - Şifrelenmiş mesaj metinleri (encryptedTexts) map olmalı
+        // - Zaman damgası sunucu zamanı olmalı
+        allow create: if request.resource.data.senderUsername is string &&
+                        request.resource.data.encryptedTexts is map &&
+                        request.resource.data.timestamp == request.time;
+                        
+        // Güncelleme ve silme şimdilik kapalı                
+        allow update, delete: if false;
+      }
+    }
+  }
+} 
