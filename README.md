@@ -1,4 +1,4 @@
-# 🔐 SafeZone - Güvenli Mesajlaşma Uygulaması
+# 🔐 Crodinger - Güvenli Mesajlaşma Uygulaması
 
 <div align="center">
 
@@ -9,7 +9,7 @@
 ![NativeWind](https://img.shields.io/badge/NativeWind-Latest-38BDF8?style=for-the-badge&logo=tailwindcss)
 
 <p align="center">
-  <img src="assets/logo_full_transparent.png" alt="SafeZone Logo" width="200"/>
+  <img src="assets/logo_full_transparent.png" alt="Crodinger Logo" width="200"/>
 </p>
 
 **Uçtan Uca Şifreli Mesajlaşma Uygulaması**
@@ -18,7 +18,7 @@
 
 ## 📱 Proje Hakkında
 
-SafeZone, kullanıcı kimlik doğrulaması olmadan çalışan, uçtan uca şifreli (E2EE) bir mobil mesajlaşma uygulamasıdır. Kullanıcıların fotoğraflarından benzersiz kriptografik anahtar çiftleri üreterek, güvenli iletişim sağlar.
+Crodinger, kullanıcı kimlik doğrulaması olmadan çalışan, uçtan uca şifreli (E2EE) bir mobil mesajlaşma uygulamasıdır. Kullanıcıların fotoğraflarından benzersiz kriptografik anahtar çiftleri üreterek, güvenli iletişim sağlar.
 
 ### ✨ Temel Özellikler
 
@@ -59,7 +59,7 @@ SafeZone, kullanıcı kimlik doğrulaması olmadan çalışan, uçtan uca şifre
 1. **Projeyi klonlayın**
    ```bash
    git clone <repository-url>
-   cd SafeZone
+   cd Crodinger
    ```
 
 2. **Bağımlılıkları yükleyin**
@@ -79,7 +79,7 @@ SafeZone, kullanıcı kimlik doğrulaması olmadan çalışan, uçtan uca şifre
 ## 📂 Proje Yapısı
 
 ```
-SafeZone/
+Crodinger/
 ├── app/                    # Expo Router ekranları
 │   ├── (auth)/            # Kimlik doğrulama ekranları
 │   ├── (tabs)/            # Ana uygulama sekmeleri
